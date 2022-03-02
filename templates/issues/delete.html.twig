@@ -27,10 +27,10 @@
             {{ issue.description }}
         </p>
         <p><strong>Submitted on:</strong>
-            {{ issue.submissionDate}}
+            {{ issue.submissionDate|date}}
         </p>
         <p><strong>Last modified on:</strong>
-            {{ issue.modificationDate }}
+            {{ issue.modificationDate|date }}
         </p>
         <button type="submit">Delete</button>
     </form>
