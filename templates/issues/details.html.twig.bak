@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Issue details</title>
+    <link rel="stylesheet" href="https://cdn.discordapp.com/attachments/941294676324008009/948250479824105523/main.css">
+</head>
+
+<body>
+    <h1>
+        Displaying details for Issue #{{ id }}:<br>
+        <strong>{{ issue.Title }}</strong>
+    </h1>
+
+    <p>Go back to <a href="../home">all issues</a></p>
+    <p>
+        <strong>ID:</strong> {{ id }}
+    </p>
+    <p>
+        <strong>Title:</strong> {{ issue.title }}
+    </p>
+    <p>
+        <strong>Description:</strong> {{ issue.description }}
+    </p>
+    <p>
+        <strong>Submitted on:</strong> {{ issue.submissionDate|date }}
+    </p>
+    <p>
+        <strong>Last modified on:</strong> {{ issue.modificationDate|date }}
+    </p>
+    <p>
+        <strong>Status:</strong> {{ issue.resolutionDate|date }}
+    </p>
+</body>
+
+</html>
