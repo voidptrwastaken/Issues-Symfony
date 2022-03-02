@@ -70,13 +70,6 @@ function readIssues($databasePath): array
 {
     $issues = [];
 
-    //$issue1 = new Issue("Cool issue", "Some swag description", 1646046898, 1646054179, false, null);
-//
-    //$issue2 = new Issue("Issues are now objects", "wow!! it works for real!!!!!!", 1646046756, 1646054655, false, 1646046898);
-//
-    //array_push($issues, $issue1);
-    //array_push($issues, $issue2);
-
     if (file_exists($databasePath)) {
         $issuesAsJson = file_get_contents($databasePath);
         $issuesRaw = json_decode($issuesAsJson, true);
@@ -111,9 +104,14 @@ function updateIssue($title, $description, $issueIndex, $databasePath): void
     file_put_contents($databasePath, $issuesAsJson);
 }
 
-function displayIssue($issueIndex, $databasePath): Issue
+function displayIssue($issueIndex, $databasePath)
 {
     $issues = readIssues($databasePath);
+
+    if(!array_key_exists($issueIndex, $issues))
+    {
+        return null;
+    }
     return $issues[$issueIndex];
 }
 

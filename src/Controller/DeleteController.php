@@ -8,12 +8,12 @@ use Symfony\Component\Routing\Annotation\Route;
 
 use function App\Database\displayIssue;
 
-class DetailsController extends AbstractController
+class DeleteController extends AbstractController
 {
     /**
-     * @Route("/issues/{id}")
+     * @Route("/issues/delete/{id}")
      */
-    public function showDetails($id): Response
+    public function deleteIssue($id): Response
     {
         $databasePath = __DIR__."/../../var/issues.json";
         $issue = displayIssue($id, $databasePath);
@@ -21,8 +21,8 @@ class DetailsController extends AbstractController
         dump($databasePath);
 
         if ($issue == null) {
-            return new Response($this->renderView("issues/error.html.twig", ["id" => (int)$id], 404));
+            return new Response($this->renderView("issues/error.html.twig", ["id" => $id + 1]), 404);
         }
-        return new Response($this->renderView("issues/details.html.twig", ["issue" => $issue, "id" => $id + 1]));
+        return new Response($this->renderView("issues/delete.html.twig", ["issue" => $issue, "id" => $id + 1]));
     }
 }

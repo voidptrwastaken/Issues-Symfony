@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style></style>
+    <title>Delete an issue</title>
+</head>
+
+<body style="font-size:x-large">
+    <h1>Delete an issue</h1>
+
+    {% if issue.resolutionStatus == true %}
+    <p>You cannot delete this issue, as it has already been solved<br>See the details <a href="/issues/{{ id }}">here</a></p>
+    {% else %}
+    <form method="POST">
+        <p><strong>Are you sure you want to delete the following issue?</strong></p>
+        <p><strong>ID:</strong>
+            {{ id + 1 }}
+        </p>
+        <p><strong>Title:</strong>
+            {{ issue.title }}
+        </p>
+        <p><strong>Description:</strong>
+            {{ issue.description }}
+        </p>
+        <p><strong>Submitted on:</strong>
+            {{ issue.submissionDate}}
+        </p>
+        <p><strong>Last modified on:</strong>
+            {{ issue.modificationDate }}
+        </p>
+        <button type="submit">Delete</button>
+    </form>
+    <a href="/home"><button>Cancel</button></a>
+    {% endif %}
+</body>
+
+</html>
