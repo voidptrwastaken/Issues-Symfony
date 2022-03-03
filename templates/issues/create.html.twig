@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+
+    </style>
+    <title>New issue</title>
+</head>
+
+<script>
+    function autoGrow(oField) {
+        if (oField.scrollHeight > oField.clientHeight) {
+            oField.style.height = oField.scrollHeight + "px";
+        }
+    }
+</script>
+
+<body style="font-size:x-large">
+    <h1>Create an issue</h1>
+    <p>Create a new issue, or go back to <a href="../home">existing</a> issues</p>
+    <div class="displayForm">
+        <form method="POST">
+            <div>
+                <label for="title">Title</label>
+                <input type="text" name="title" id="title" placeholder="title goes here" />
+            </div>
+            <div>
+                <label for="description">Description</label>
+                <textarea class="noscrollbars" onkeyup="autoGrow(this);" type="text" name="description" id="description" placeholder="description goes here"></textarea>
+            </div>
+            <div>
+                <button type="submit">Create</button>
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>

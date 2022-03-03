@@ -21,6 +21,8 @@ class DetailsController extends AbstractController
         dump($databasePath);
 
         if ($issue == null) {
+
+            //a eviter
             return new Response($this->renderView("issues/error.html.twig", ["id" => (int)$id], 404));
         }
         return new Response($this->renderView("issues/details.html.twig", ["issue" => $issue, "id" => $id + 1]));

@@ -18,7 +18,7 @@ class DeleteController extends AbstractController
         $databasePath = __DIR__ . "/../../var/issues.json";
         $issue = displayIssue($id, $databasePath);
 
-        if ($issue == null) {
+        if ($issue === null) {
             throw $this->createNotFoundException("The requested issue (" . (int)$id + 1 . ") was not found");
         }
         return new Response($this->renderView("issues/delete.html.twig", ["issue" => $issue, "id" => $id + 1]));
