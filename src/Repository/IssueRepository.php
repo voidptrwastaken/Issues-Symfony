@@ -15,8 +15,10 @@ class IssueRepository
 
     public function createIssue(string $title, string $description)
     {
-        $query = "INSERT INTO issue (title, description) VALUES ('{$title}', '{$description}')";
+        $query = "INSERT INTO issue (title, description) VALUES (:title, :description)";
         $statement = $this->pdo->prepare($query);
+        $statement->bindValue(":title", $title);
+        $statement->bindValue(":description", $description);
         $statement->execute();
     }
 }
