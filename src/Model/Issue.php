@@ -4,27 +4,38 @@ namespace App\Model;
 
 class Issue
 {
+    private int $id;
     private string $title;
     private string $description;
     private int $submissionDate;
     private ?int $modificationDate = null;
-    private bool $isSolved = false;
+    private int $severity;
+    private int $isSolved;
     private ?int $resolutionDate = null;
-    
+
     public function __construct(
+        int $id,
         string $title,
         string $description,
         int $submissionDate,
         ?int $modificationDate,
-        bool $isSolved,
+        int $severity,
+        int $isSolved,
         ?int $resolutionDate
     ) {
+        $this->id = $id;
         $this->title = $title;
         $this->description = $description;
         $this->submissionDate = $submissionDate;
         $this->modificationDate = $modificationDate;
+        $this->severity = $severity;
         $this->isSolved = $isSolved;
         $this->resolutionDate = $resolutionDate;
+    }
+
+    public function getID(): int
+    {
+        return $this->id;
     }
     public function getTitle(): string
     {
@@ -41,6 +52,10 @@ class Issue
     public function getModificationDate(): ?int
     {
         return $this->modificationDate;
+    }
+    public function getSeverity(): int
+    {
+        return $this->severity;
     }
     public function getResolutionStatus(): bool
     {

@@ -25,7 +25,7 @@ class NewController extends AbstractController
     #[Route("/create", methods: ["POST"])]
     public function createIssue(): Response
     {
-        $this->repository->createIssue($_POST["title"], $_POST["description"]);
+        $this->repository->createIssue($_POST["title"], $_POST["description"], (int)$_POST["severity"]);
         
         return $this->redirectToRoute('app_home_showissues');
     }

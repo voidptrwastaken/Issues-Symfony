@@ -52,7 +52,7 @@ function createIssue($title, $description, $databasePath): void
     //    "resolutionDate" => null
     //];
 
-    $issue = new Issue($title, $description, time(), null, false, null);
+    $issue = new Issue(0, $title, $description, time(), null, 0, 0, null);
 
     $issues = [];
     if (file_exists($databasePath)) {
@@ -76,7 +76,7 @@ function readIssues($databasePath): array
 
         foreach($issuesRaw as $index => $issue)
         {
-            $issueObject = new Issue($issue["title"], $issue["description"], $issue["submissionDate"], $issue["modificationDate"], $issue["isSolved"], $issue["resolutionDate"]);
+            $issueObject = new Issue($issue["id"], $issue["title"], $issue["description"], $issue["submissionDate"], $issue["modificationDate"], $issue["severity"], $issue["isSolved"], $issue["resolutionDate"]);
         
             array_push($issues, $issueObject);
         }
