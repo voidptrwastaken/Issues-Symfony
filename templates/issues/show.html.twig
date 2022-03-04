@@ -1,63 +1,72 @@
 {% extends "base.html.twig" %}
 
+{% block title %}Issues
+{% endblock %}
+
 {% block body %}
 	<h1>Issues</h1>
-	<p>Create a new issue
-		<a href="/create">here</a>
-	</p>
-	<table class="pure-table pure-table-bordered pure-table-striped">
-		<thead>
-			<tr>
-				<th>ID</th>
-				<th>Title</th>
-				<th>Description</th>
-				<th>Submitted on</th>
-				<th>Last modified on</th>
-				<th>Severity</th>
-				<th>Status</th>
-				<th>Actions</th>
-			</tr>
-		</thead>
-		<tbody>
-			{% for issue in issues %}
+	{% if issues|length == 0 %}
+		<p>There are currently no issues to display. You can create a new issue
+			<a href="/create">here</a>
+		</p>
+	{% else %}
+		<p>Found {{ issues|length }} issues. Create a new issue
+			<a href="/create">here</a>
+		</p>
+		<table class="pure-table pure-table-bordered pure-table-striped">
+			<thead>
 				<tr>
-					<td>{{ issue.id }}</td>
-					<td>{{ issue.title }}</td>
-					<td>{{ issue.description|nl2br }}</td>
-					<td>{{ issue.submissionDate|date }}</td>
-					{% if issue.modificationDate == null %}
-						<td>Never</td>
-					{% else %}
-						<td>{{ issue.modificationDate|date }}</td>
-					{% endif %}
-
-					{% if issue.severity == 1 %}
-						<td>Low</td>
-					{% elseif issue.severity == 2 %}
-						<td>Medium</td>
-					{% elseif issue.severity == 3 %}
-						<td>High</td>
-					{% elseif issue.severity == 4 %}
-						<td>Critical</td>
-					{% endif %}
-
-					{% if issue.resolutionStatus == 1 %}
-						<td>Solved<br>({{ issue.resolutionDate|date }})</td>
-						<td>
-							<a href="/issues/{{issue.id}}">Details</a>
-						</td>
-					{% else %}
-						<td>Not solved</td>
-						<td>
-							<a href="/issues/update/{{issue.id}}">Update</a><br>
-							<a href="/issues/delete/{{issue.id}}">Delete</a><br>
-							<a href="/issues/forceDelete/{{issue.id}}">Force delete</a><br>
-							<a href="/issues/solve/{{issue.id}}">Solve</a><br>
-							<a href="/issues/{{issue.id}}">Details</a>
-						</td>
-					{% endif %}
+					<th>ID</th>
+					<th>Title</th>
+					<th>Description</th>
+					<th>Submitted on</th>
+					<th>Last modified on</th>
+					<th>Severity</th>
+					<th>Status</th>
+					<th>Actions</th>
 				</tr>
-			{% endfor %}
-		</tbody>
-	</tbody>
-</table>{% endblock %}
+			</thead>
+			<tbody>
+				{% for issue in issues %}
+					<tr>
+						<td>{{ issue.id }}</td>
+						<td>{{ issue.title }}</td>
+						<td>{{ issue.description|nl2br }}</td>
+						<td>{{ issue.submissionDate|date }}</td>
+						{% if issue.modificationDate == null %}
+							<td>Never</td>
+						{% else %}
+							<td>{{ issue.modificationDate|date }}</td>
+						{% endif %}
+
+						{% if issue.severity == 1 %}
+							<td>Low</td>
+						{% elseif issue.severity == 2 %}
+							<td>Medium</td>
+						{% elseif issue.severity == 3 %}
+							<td>High</td>
+						{% elseif issue.severity == 4 %}
+							<td>Critical</td>
+						{% endif %}
+
+						{% if issue.resolutionStatus == 1 %}
+							<td>Solved<br>({{ issue.resolutionDate|date }})</td>
+							<td>
+								<a href="/issues/{{issue.id}}">Details</a>
+							</td>
+						{% else %}
+							<td>Not solved</td>
+							<td>
+								<a href="/issues/update/{{issue.id}}">Update</a><br>
+								<a href="/issues/delete/{{issue.id}}">Delete</a><br>
+								<a href="/issues/forceDelete/{{issue.id}}">Force delete</a><br>
+								<a href="/issues/solve/{{issue.id}}">Solve</a><br>
+								<a href="/issues/{{issue.id}}">Details</a>
+							</td>
+						{% endif %}
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	{% endif %}
+{% endblock %}
