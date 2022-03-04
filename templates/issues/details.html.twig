@@ -1,3 +1,5 @@
+{% extends "base.html.twig" %}
+
 {% block body%}
 	<h1>
 		Displaying details for Issue #{{ id }}:<br>
@@ -17,7 +19,7 @@
 	</p>
 	<p>
 		<strong>Description:</strong>
-		{{ issue.description }}
+		{{ issue.description|nl2br }}
 	</p>
 	<p>
 		<strong>Submitted on:</strong>
@@ -41,6 +43,10 @@
 	</p>
 	<p>
 		<strong>Status:</strong>
-		{{ issue.resolutionDate|date }}
+		{% if issue.resolutionStatus == 1 %}
+			Solved ({{ issue.resolutionDate|date }})
+		{% else %}
+			Not solved
+		{% endif %}
 	</p>
 {% endblock %}

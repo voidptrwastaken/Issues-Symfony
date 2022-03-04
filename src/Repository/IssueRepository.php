@@ -31,12 +31,29 @@ class IssueRepository
 
     public function updateIssue(int $id, string $title, string $description, int $severity)
     {
-        $query = "UPDATE issue SET title=':title', description=':description', modificationDate=':modificationDate', severity=':severity' WHERE id=$id";
+        $query = "UPDATE issue SET title=:title, description=:description, modificationDate=:modificationDate, severity=:severity WHERE id=$id";
         $statement = $this->pdo->prepare($query);
         $statement->bindValue(":title", $title);
         $statement->bindValue(":description", $description);
         $statement->bindValue(":modificationDate", time());
         $statement->bindValue(":severity", $severity);
+        $statement->execute();
+    }
+
+    public function deleteIssue(int $id)
+    {
+        $query = "DELETE FROM issue WHERE id=:id";
+        $statement = $this->pdo->prepare($query);
+        $statement->bindValue(":id", $id);
+        $statement->execute();
+    }
+
+    public function solveIssue(int $id)
+    {
+        $query = "UPDATE issue SET isSolved=:status, resolutionDate=:rDate WHERE id=$id";
+        $statement = $this->pdo->prepare($query);
+        $statement->bindValue(":status", 1);
+        $statement->bindValue(":rDate", time());
         $statement->execute();
     }
 
@@ -61,9 +78,8 @@ class IssueRepository
     }
 
     public function fetchIssue(int $id)
-    {
-        $id --;
-        
+    {    
+        $id--;    
         $issues = $this->fetchIssues();
 
         if (!array_key_exists($id, $issues)) {

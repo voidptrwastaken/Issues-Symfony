@@ -23,7 +23,7 @@
 				<tr>
 					<td>{{ issue.id }}</td>
 					<td>{{ issue.title }}</td>
-					<td>{{ issue.description }}</td>
+					<td>{{ issue.description|nl2br }}</td>
 					<td>{{ issue.submissionDate|date }}</td>
 					{% if issue.modificationDate == null %}
 						<td>Never</td>
@@ -41,7 +41,7 @@
 						<td>Critical</td>
 					{% endif %}
 
-					{% if issue.resolutionDate == true %}
+					{% if issue.resolutionStatus == 1 %}
 						<td>Solved<br>({{ issue.resolutionDate|date }})</td>
 						<td>
 							<a href="/issues/{{issue.id}}">Details</a>

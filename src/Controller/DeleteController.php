@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\IssueRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,49 +13,52 @@ use function App\Database\displayIssue;
 
 class DeleteController extends AbstractController
 {
-    #[Route("/issues/delete/{id}", methods: ["GET", "HEAD"])]
-    public function showDeleteIssue($id): Response
-    {
-        $databasePath = __DIR__ . "/../../var/issues.json";
-        $issue = displayIssue($id, $databasePath);
+    private IssueRepository $repository;
 
-        if ($issue === null) {
-            throw $this->createNotFoundException("The requested issue (" . (int)$id + 1 . ") was not found");
-        }
-        return new Response($this->renderView("issues/delete.html.twig", ["issue" => $issue, "id" => $id + 1]));
+    public function __construct(IssueRepository $repository)
+    {
+        $this->repository = $repository;
     }
 
-    #[Route("/issues/delete/{id}", methods: ["POST", "HEAD"])]
+    #[Route("/issues/delete/{id}", methods: ["GET"])]
+    public function showDeleteIssue($id): Response
+    {
+        $issue = $this->repository->fetchIssue($id);
+
+        if ($issue->getResolutionStatus() === 1)
+        {
+            return new Response($this->renderView("issues/delete.html.twig", ["issue" => $issue]));
+        }
+        
+        return new Response($this->renderView("issues/delete.html.twig", ["issue" => $issue]));
+    }
+
+    #[Route("/issues/delete/{id}", methods: ["POST"])]
     public function deleteIssue($id): Response
     {
-        $databasePath = __DIR__ . "/../../var/issues.json";
-        $issue = displayIssue($id, $databasePath);
+        $issue = $this->repository->fetchIssue($id);
 
-        if ($issue == null) {
-            return new Response($this->renderView("issues/error.html.twig", ["id" => (int)$id], 404));
+        if ($issue->getResolutionStatus() === 1)
+        {
+            return new Response($this->renderView("issues/delete.html.twig", ["issue" => $issue]));
         }
 
-        deleteIssue($id, $databasePath);
+        $this->repository->deleteIssue($id);
 
         return $this->redirectToRoute('app_home_showissues');
     }
 
-    #[Route("/issues/forceDelete/{id}", methods: ["GET", "HEAD"])]
+    #[Route("/issues/forceDelete/{id}", methods: ["GET"])]
     public function forceDeleteIssue($id): Response
     {
-        $databasePath = __DIR__ . "/../../var/issues.json";
-        $issue = displayIssue($id, $databasePath);
+        $issue = $this->repository->fetchIssue($id);
 
-        if ($issue == null) {
-            return new Response($this->renderView("issues/error.html.twig", ["id" => (int)$id], 404));
-        }
-
-        elseif ($issue->getResolutionStatus() === true)
+        if ($issue->getResolutionStatus() === 1)
         {
-            return new Response($this->renderView("issues/delete.html.twig", ["issue" => $issue, "id" => $id + 1]));
+            return new Response($this->renderView("issues/delete.html.twig", ["issue" => $issue]));
         }
 
-        deleteIssue($id, $databasePath);
+        $this->repository->deleteIssue($id);
 
         return $this->redirectToRoute('app_home_showissues');
     }

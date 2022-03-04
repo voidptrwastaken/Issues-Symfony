@@ -57,7 +57,7 @@ class Issue
     {
         return $this->severity;
     }
-    public function getResolutionStatus(): bool
+    public function getResolutionStatus(): int
     {
         return $this->isSolved;
     }
