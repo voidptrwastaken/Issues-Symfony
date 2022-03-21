@@ -6,16 +6,16 @@
 {% block body %}
 	<h1>Update existing issue</h1>
 
-	{% if issue.resolutionStatus == 1 %}
+	{% if issue.resolutionStatus == 1 %} <!-- resolutionStatus -> isSolved -->
 		<p>You cannot update this issue, as it has already been solved<br>See the details
-			<a href="/issues/{{ issue.id }}">here</a>
+			<a href="{{ path("app_details_showdetails", {"id": issue.id}) }}">here</a>
 		</p>
 	{% else %}
 		<p>Update the current issue, or go back to
-			<a href="../../home">existing</a>
+			<a href="{{ path ("app_home_showissues")}}">existing</a>
 			issues</p>
 		<div class="displayForm">
-			<form method="POST">
+			<form method="POST" action="{{ path("app_update_updateissue", {"id": issue.id}) }}">
 				<div>
 					<label for="title">Title</label>
 					<input type="text" name="title" id="title" placeholder="title goes here" value="{{ issue.title }}"/>

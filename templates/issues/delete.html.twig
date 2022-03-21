@@ -8,10 +8,10 @@
 
 	{% if issue.resolutionStatus == 1 %}
 		<p>You cannot delete this issue, as it has already been solved<br>See the details
-			<a href="/issues/{{ issue.id }}">here</a>
+			<a href="{{ path("app_details_showdetails", {"id": issue.id}) }}">here</a>
 		</p>
 	{% else %}
-		<form method="POST">
+		<form method="POST" action=""{{ path("app_delete_deleteissue", {"id": issue.id}) }}>
 			<p>
 				<strong>Are you sure you want to delete the following issue?</strong>
 			</p>
@@ -37,7 +37,7 @@
 			</p>
 			<button type="submit">Delete</button>
 		</form>
-		<a href="/home">
+		<a href="{{ path ("app_home_showissues")}}">
 			<button>Cancel</button>
 		</a>
 	{% endif %}

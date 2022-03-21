@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Repository\IssueRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -24,9 +25,9 @@ class UpdateController extends AbstractController
     }
 
     #[Route("issues/update/{id}", methods: ["POST"])]
-    public function updateIssue($id): Response
+    public function updateIssue($id, Request $request): Response
     {
-        $this->repository->updateIssue((int) $id, $_POST["title"], $_POST["description"], (int)$_POST["severity"]);
+        $this->repository->updateIssue((int) $id, $request->request->get("title"), $request->request->get("description"), (int)$request->request->get("severity"));
         
         return $this->redirectToRoute('app_home_showissues');
     }

@@ -7,11 +7,11 @@
 	<h1>Issues</h1>
 	{% if issues|length == 0 %}
 		<p>There are currently no issues to display. You can create a new issue
-			<a href="/create">here</a>
+			<a href="{{ path("app_new_createissue") }}">here</a>
 		</p>
 	{% else %}
 		<p>Found {{ issues|length }} issues. Create a new issue
-			<a href="/create">here</a>
+			<a href="{{ path("app_new_createissue") }}">here</a>
 		</p>
 		<table class="pure-table pure-table-bordered pure-table-striped">
 			<thead>
@@ -52,16 +52,16 @@
 						{% if issue.resolutionStatus == 1 %}
 							<td>Solved<br>({{ issue.resolutionDate|date }})</td>
 							<td>
-								<a href="/issues/{{issue.id}}">Details</a>
+								<a href="{{ path("app_details_showdetails", {"id": issue.id}) }}">Details</a>
 							</td>
 						{% else %}
 							<td>Not solved</td>
 							<td>
-								<a href="/issues/update/{{issue.id}}">Update</a><br>
-								<a href="/issues/delete/{{issue.id}}">Delete</a><br>
-								<a href="/issues/forceDelete/{{issue.id}}">Force delete</a><br>
-								<a href="/issues/solve/{{issue.id}}">Solve</a><br>
-								<a href="/issues/{{issue.id}}">Details</a>
+								<a href="{{ path("app_update_showupdateissue", {"id": issue.id}) }}">Update</a><br>
+								<a href="{{ path("app_delete_showdeleteissue", {"id": issue.id}) }}">Delete</a><br>
+								<a href="{{ path("app_delete_forcedeleteissue", {"id": issue.id}) }}">Force delete</a><br>
+								<a href="{{ path("app_solve_solveissue", {"id": issue.id}) }}">Solve</a><br>
+								<a href="{{ path("app_details_showdetails", {"id": issue.id}) }}">Details</a>
 							</td>
 						{% endif %}
 					</tr>

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Repository\IssueRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -23,9 +24,9 @@ class NewController extends AbstractController
     }
 
     #[Route("/create", methods: ["POST"])]
-    public function createIssue(): Response
+    public function createIssue(Request $request): Response
     {
-        $this->repository->createIssue($_POST["title"], $_POST["description"], (int)$_POST["severity"]);
+        $this->repository->createIssue($request->request->get("title"), $request->request->get("description"), (int)$request->request->get("severity"));
         
         return $this->redirectToRoute('app_home_showissues');
     }
