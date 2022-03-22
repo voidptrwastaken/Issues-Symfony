@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Form\Type\IssueType;
 use App\Repository\IssueRepository;
+use IssueData;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,18 +19,28 @@ class UpdateController extends AbstractController
         $this->repository = $repository;
     }
 
-    #[Route("issues/update/{id}", methods: ["GET"])]
-    public function showUpdateIssue($id): Response
+    #[Route("issues/update/{id}")]
+    public function showUpdateIssue($id, Request $request): Response
     {
         $issue = $this->repository->fetchIssue((int)$id);
-        return new Response($this->renderView("issues/update.html.twig", ["issue" => $issue]));
-    }
 
-    #[Route("issues/update/{id}", methods: ["POST"])]
-    public function updateIssue($id, Request $request): Response
-    {
-        $this->repository->updateIssue((int) $id, $request->request->get("title"), $request->request->get("description"), (int)$request->request->get("severity"));
-        
-        return $this->redirectToRoute('app_home_showissues');
+        $issueData = new IssueData();
+
+        $issueData->title = $issue->getTitle();
+        $issueData->description = $issue->getDescription();
+        $issueData->severity = $issue->getSeverity();
+
+        $form = $this->createForm(IssueType::class, $issueData);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var IssueData */
+            $issueData = $form->getData();
+
+            $this->repository->updateIssue((int) $id, $issueData->title, $issueData->description, $issueData->severity);
+
+            return $this->redirectToRoute('app_home_showissues');
+        }
+
+        return new Response($this->renderView("issues/update.html.twig", ["form" => $form->createView(), "issue" => $issue]));
     }
 }

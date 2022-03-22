@@ -4,15 +4,14 @@ namespace App\Repository;
 
 use App\Model\Issue;
 use PDO;
-use Symfony\Bundle\MakerBundle\Str;
 
 class IssueRepository
 {
     private PDO $pdo;
 
-    public function __construct()
+    public function __construct(PDO $pdo)
     {
-        $this->pdo = new PDO("sqlite:" . __DIR__ . "/../../var/issues.sq3");
+        $this->pdo = $pdo;
     }
 
     public function createIssue(string $title, string $description, int $severity)
@@ -77,16 +76,17 @@ class IssueRepository
         return $issues;
     }
 
-    public function fetchIssue(int $id)
-    {    
-        $id--;    
-        $issues = $this->fetchIssues();
+    public function fetchIssue(int $id): Issue
+    {        
 
-        if (!array_key_exists($id, $issues)) {
-            return null;
-        }
+        $query = 'SELECT * FROM issue WHERE id=:id';
+        $statement = $this->pdo->prepare($query);
+        $statement->bindValue(":id", $id);
+        $statement->execute();
 
-        $issue = $issues[$id]; 
-        return $issue;
+        $issue = $statement->fetch(PDO::FETCH_ASSOC);
+
+        $issueObject = new Issue($issue["id"], $issue["title"], $issue["description"], $issue["submissionDate"], $issue["modificationDate"], $issue["severity"], $issue["isSolved"], $issue["resolutionDate"]); 
+        return $issueObject;
     }
 }

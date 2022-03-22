@@ -7,8 +7,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-use function App\Database\readIssues;
-
 class HomeController extends AbstractController
 {
     private IssueRepository $repository;
@@ -17,10 +15,10 @@ class HomeController extends AbstractController
     {
         $this->repository = $repository;
     }
+    
     /**
      * @Route("/home")
      */
-
     public function showIssues(): Response
     {
         $issues = $this->repository->fetchIssues();
