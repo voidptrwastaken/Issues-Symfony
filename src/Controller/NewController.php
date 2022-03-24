@@ -2,8 +2,11 @@
 
 namespace App\Controller;
 
+use App\Form\Type\IssueType;
 use App\Repository\IssueRepository;
+use IssueData;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Validator\Constraints\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,17 +20,21 @@ class NewController extends AbstractController
         $this->repository = $repository;
     }
 
-    #[Route("/create", methods: ["GET"])]
-    public function showCreateIssue(): Response
-    {
-        return new Response($this->renderView("issues/create.html.twig"));
-    }
-
-    #[Route("/create", methods: ["POST"])]
+    #[Route("/create")]
     public function createIssue(Request $request): Response
     {
-        $this->repository->createIssue($request->request->get("title"), $request->request->get("description"), (int)$request->request->get("severity"));
-        
-        return $this->redirectToRoute('app_home_showissues');
+        $issueData = new IssueData();
+
+        $form = $this->createForm(IssueType::class, $issueData);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var IssueData */
+            $issueData = $form->getData();
+
+            $this->repository->createIssue($issueData->title, $issueData->description, $issueData->severity);
+
+            return $this->redirectToRoute('app_home_showissues');
+        }
+        return new Response($this->renderView("issues/create.html.twig", ["form" => $form->createView()]));
     }
 }
