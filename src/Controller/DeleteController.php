@@ -48,7 +48,7 @@ class DeleteController extends AbstractController
         return $this->redirectToRoute('app_home_showissues');
     }
 
-    #[Route("/issues/forceDelete/{id}", methods: ["GET"])]
+    #[Route("/issues/forceDelete/{id}", methods: ["POST"])]
     public function forceDeleteIssue($id): Response
     {
         $issue = $this->repository->fetchIssue($id);
