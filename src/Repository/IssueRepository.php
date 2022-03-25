@@ -76,6 +76,28 @@ class IssueRepository
         return $issues;
     }
 
+    public function searchIssues(string $term): array
+    {
+        $query = 'SELECT * FROM issue WHERE title=:term OR description=:term OR title LIKE :termWild OR description LIKE :termWild';
+        $statement = $this->pdo->prepare($query);
+        $statement->bindValue(":term", $term);
+        $statement->bindValue(":termWild", "%" . $term . "%");
+        $statement->execute();
+
+        $issuesArray = $statement->fetchAll(\PDO::FETCH_ASSOC);
+
+        $issues = [];
+
+        foreach($issuesArray as $index => $issue)
+        {
+            $issueObject = new Issue($issue["id"], $issue["title"], $issue["description"], $issue["submissionDate"], $issue["modificationDate"], $issue["severity"], $issue["isSolved"], $issue["resolutionDate"]);
+        
+            array_push($issues, $issueObject);
+        }
+
+        return $issues;
+    }
+
     public function fetchIssue(int $id): Issue
     {        
 
