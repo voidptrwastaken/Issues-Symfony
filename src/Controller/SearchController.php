@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use Amp\Http\Client\Request;
+use Symfony\Component\HttpFoundation\Request;
 use App\Repository\IssueRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,10 +17,10 @@ class SearchController extends AbstractController
         $this->repository = $repository;
     }
     
-    #[Route("/search/{query}", methods: ["GET"])]
-    public function searchIssues(string $query): Response
+    #[Route("/search", methods: ["GET"])]
+    public function searchIssues(Request $request): Response
     {
-        $issues = $this->repository->searchIssues($query);
+        $issues = $this->repository->searchIssues($request->query->get("query"));
         return new Response($this->renderView("issues/show.html.twig", ["issues" => $issues]));
     }
 }

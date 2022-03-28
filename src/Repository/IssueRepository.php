@@ -66,10 +66,9 @@ class IssueRepository
 
         $issues = [];
 
-        foreach($issuesArray as $index => $issue)
-        {
+        foreach ($issuesArray as $index => $issue) {
             $issueObject = new Issue($issue["id"], $issue["title"], $issue["description"], $issue["submissionDate"], $issue["modificationDate"], $issue["severity"], $issue["isSolved"], $issue["resolutionDate"]);
-        
+
             array_push($issues, $issueObject);
         }
 
@@ -78,20 +77,25 @@ class IssueRepository
 
     public function searchIssues(string $term): array
     {
-        $query = 'SELECT * FROM issue WHERE title=:term OR description=:term OR title LIKE :termWild OR description LIKE :termWild';
-        $statement = $this->pdo->prepare($query);
-        $statement->bindValue(":term", $term);
-        $statement->bindValue(":termWild", "%" . $term . "%");
-        $statement->execute();
+        $terms = preg_split("/\s+/", $term);
 
-        $issuesArray = $statement->fetchAll(\PDO::FETCH_ASSOC);
+        $issuesArray = [];
+
+        foreach ($terms as $token) {
+            $query = 'SELECT * FROM issue WHERE title LIKE :termWild OR description LIKE :termWild';
+            $statement = $this->pdo->prepare($query);
+            //$statement->bindValue(":term", $term);
+            $statement->bindValue(":termWild", "%" . $token . "%");
+            $statement->execute();
+
+            $issuesArray += $statement->fetchAll(\PDO::FETCH_ASSOC);
+        }
 
         $issues = [];
 
-        foreach($issuesArray as $index => $issue)
-        {
+        foreach ($issuesArray as $issue) {
             $issueObject = new Issue($issue["id"], $issue["title"], $issue["description"], $issue["submissionDate"], $issue["modificationDate"], $issue["severity"], $issue["isSolved"], $issue["resolutionDate"]);
-        
+
             array_push($issues, $issueObject);
         }
 
@@ -99,7 +103,7 @@ class IssueRepository
     }
 
     public function fetchIssue(int $id): Issue
-    {        
+    {
 
         $query = 'SELECT * FROM issue WHERE id=:id';
         $statement = $this->pdo->prepare($query);
@@ -108,7 +112,7 @@ class IssueRepository
 
         $issue = $statement->fetch(PDO::FETCH_ASSOC);
 
-        $issueObject = new Issue($issue["id"], $issue["title"], $issue["description"], $issue["submissionDate"], $issue["modificationDate"], $issue["severity"], $issue["isSolved"], $issue["resolutionDate"]); 
+        $issueObject = new Issue($issue["id"], $issue["title"], $issue["description"], $issue["submissionDate"], $issue["modificationDate"], $issue["severity"], $issue["isSolved"], $issue["resolutionDate"]);
         return $issueObject;
     }
 }
