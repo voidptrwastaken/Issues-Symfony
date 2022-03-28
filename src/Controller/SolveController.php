@@ -16,7 +16,7 @@ class SolveController extends AbstractController
         $this->repository = $repository;
     }
 
-    #[Route("issues/solve/{id}", methods: ["GET"])]
+    #[Route("issues/solve/{id}", methods: ["POST"])]
     public function solveIssue($id): Response
     {
         $issue = $this->repository->fetchIssue((int) $id);

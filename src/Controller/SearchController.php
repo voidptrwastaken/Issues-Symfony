@@ -17,7 +17,7 @@ class SearchController extends AbstractController
         $this->repository = $repository;
     }
     
-    #[Route("/search/{?query}", methods: ["GET"])]
+    #[Route("/search/{query}", methods: ["GET"])]
     public function searchIssues(string $query): Response
     {
         $issues = $this->repository->searchIssues($query);
