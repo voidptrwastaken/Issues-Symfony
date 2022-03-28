@@ -2,14 +2,6 @@
 {% block title %}Issues{% endblock %} 
 {% block body %}
 
-<script type="text/javascript">
-function search() {
-    var query = document.getElementById("query").value
-    var url = "http://localhost:8000/search/" + query
-    window.open(url, "_self")
-}
-</script>
-
 <h1>Issues</h1>
 {% if issues|length == 0 %}
 <p>There are currently no issues to display. You can create a new issue
@@ -20,7 +12,7 @@ function search() {
     <a href="{{ path("app_new_createissue") }}">here</a>
 </p>
 
-<form method="get" action="{{ path("app_search_searchissues") }}">
+<form action="{{ path("app_search_searchissues") }}">
 <label for="query">Search issues:</label><br>
     <input type="search" id="query" name="query" placeholder="Issue title or description" size="40">
     <button type="submit">Search</button>

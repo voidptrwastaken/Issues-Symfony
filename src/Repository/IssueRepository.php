@@ -95,7 +95,7 @@ class IssueRepository
         $statement = $this->pdo->prepare($query);
 
         foreach ($tokens as $index => $token) {
-
+            $token = str_replace(["%", "_"], ["\%", "\_"], $token);
             $statement->bindValue(":term_" . $index, "%" . $token . "%");
         }
         $statement->execute();
