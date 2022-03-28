@@ -75,21 +75,32 @@ class IssueRepository
         return $issues;
     }
 
-    public function searchIssues(string $term): array
+    public function searchIssues(string $searchQuery): array
     {
-        $terms = preg_split("/\s+/", $term);
+        $tokens = preg_split("/\s+/", $searchQuery);
 
         $issuesArray = [];
 
-        foreach ($terms as $token) {
-            $query = 'SELECT * FROM issue WHERE title LIKE :termWild OR description LIKE :termWild';
-            $statement = $this->pdo->prepare($query);
-            //$statement->bindValue(":term", $term);
-            $statement->bindValue(":termWild", "%" . $token . "%");
-            $statement->execute();
+        $titleQuery = "";
+        $descriptionQuery = "";
 
-            $issuesArray += $statement->fetchAll(\PDO::FETCH_ASSOC);
+        foreach ($tokens as $index => $token) {
+
+            $titleQuery .= ($titleQuery === '' ? ' ' : ' AND ') . "title LIKE :term_" . $index . " ";
+
+            $descriptionQuery .= ($descriptionQuery === '' ? ' ' : ' AND ') . "description LIKE :term_" . $index . " ";
         }
+
+        $query = 'SELECT * FROM issue WHERE (' . $titleQuery  . ') OR (' . $descriptionQuery . ')';
+        $statement = $this->pdo->prepare($query);
+
+        foreach ($tokens as $index => $token) {
+
+            $statement->bindValue(":term_" . $index, "%" . $token . "%");
+        }
+        $statement->execute();
+
+        $issuesArray = $statement->fetchAll(\PDO::FETCH_ASSOC);
 
         $issues = [];
 
