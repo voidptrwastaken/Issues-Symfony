@@ -2,7 +2,7 @@
 {% block title %}Issues{% endblock %} 
 {% block body %}
 
-<h1>Issues</h1>
+<h1>{{ message }} ({{ count }} results)</h1>
 
 <form action="{{ path("app_search_searchissues") }}">
 <label for="query">Search issues:</label><br>
@@ -10,14 +10,13 @@
     <button type="submit">Search</button>
 </form>
 
+<p>Create a new issue <a href="{{ path("app_new_createissue") }}">here</a></p>
+
 {% if count == 0 %}
 <p>There are currently no issues to display. You can create a new issue
     <a href="{{ path("app_new_createissue") }}">here</a>
 </p>
 {% else %}
-<p>Found {{ count }} issues. Create a new issue
-    <a href="{{ path("app_new_createissue") }}">here</a>
-</p>
 
 <table class="pure-table pure-table-bordered pure-table-striped">
     <thead>

@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use Symfony\Component\HttpFoundation\Request;
 use App\Repository\IssueRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,9 +21,14 @@ class HomeController extends AbstractController
     /**
      * @Route("/home")
      */
-    public function showIssues(): Response
+    public function showIssues(Request $request, PaginatorInterface $paginator): Response
     {
-        $issues = $this->repository->fetchIssues();
-        return new Response($this->renderView("issues/show.html.twig", ["issues" => $issues, "message" => ""]));
+        $issuesfromDB = $this->repository->fetchIssues();
+        $issues = $paginator->paginate(
+            $issuesfromDB,
+            $request->query->getInt('page', 1),
+            10
+        );
+        return new Response($this->renderView("issues/show.html.twig", ["issues" => $issues, "count" => count($issuesfromDB)]));
     }
 }

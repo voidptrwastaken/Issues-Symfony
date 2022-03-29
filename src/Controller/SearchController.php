@@ -7,6 +7,7 @@ use App\Repository\IssueRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Knp\Component\Pager\PaginatorInterface;
 
 class SearchController extends AbstractController
 {
@@ -18,19 +19,23 @@ class SearchController extends AbstractController
     }
 
     #[Route("/search", methods: ["GET"])]
-    public function searchIssues(Request $request): Response
+    public function searchIssues(Request $request, PaginatorInterface $paginator): Response
     {
         $query = trim($request->query->get("query"));
 
-        if ($query === "" || preg_match("/\s+[^a-z]*/", $query)) {
-            $allIssues = $this->repository->fetchIssues();
-            return new Response($this->renderView("issues/show.html.twig", ["issues" => $allIssues, "message" => "Please enter at least one term to search"]));
-        }
-        $issues = $this->repository->searchIssues($query);
 
-        if (count($issues) === 0) {
-            return new Response($this->renderView("issues/show.html.twig", ["issues" => $issues, "message" => "No results for \"" . $query . "\""]));
+        $issuesfromDB = $this->repository->searchIssues($query);
+
+        $issues = $paginator->paginate(
+            $issuesfromDB,
+            $request->query->getInt('page', 1),
+            10
+        );
+
+        if ($query === "") {
+            return new Response($this->renderView("issues/results.html.twig", ["issues" => $issues, "message" => "Please enter at least one term to search", "count" => ""]));
         }
-        return new Response($this->renderView("issues/show.html.twig", ["issues" => $issues, "message" => "Displaying search results for \"" . $query . "\""]));
+
+        return new Response($this->renderView("issues/results.html.twig", ["issues" => $issues, "message" => "Displaying search results for \"" . $query . "\"", "count" => count($issuesfromDB)]));
     }
 }
