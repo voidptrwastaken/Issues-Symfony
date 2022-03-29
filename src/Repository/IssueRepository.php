@@ -91,7 +91,7 @@ class IssueRepository
             $descriptionQuery .= ($descriptionQuery === '' ? ' ' : ' AND ') . "description LIKE :term_" . $index . " ";
         }
 
-        $query = 'SELECT * FROM issue WHERE (' . $titleQuery  . ') OR (' . $descriptionQuery . ')';
+        $query = 'SELECT * FROM issue WHERE (' . $titleQuery  . 'ESCAPE "\") OR (' . $descriptionQuery . 'ESCAPE "\")';
         $statement = $this->pdo->prepare($query);
 
         foreach ($tokens as $index => $token) {

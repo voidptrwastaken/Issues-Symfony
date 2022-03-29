@@ -3,6 +3,15 @@
 {% block body %}
 
 <h1>Issues</h1>
+
+<p>{{ message }}</p>
+
+<form action="{{ path("app_search_searchissues") }}">
+<label for="query">Search issues:</label><br>
+    <input type="search" id="query" name="query" placeholder="Issue title or description" size="40">
+    <button type="submit">Search</button>
+</form>
+
 {% if issues|length == 0 %}
 <p>There are currently no issues to display. You can create a new issue
     <a href="{{ path("app_new_createissue") }}">here</a>
@@ -11,12 +20,6 @@
 <p>Found {{ issues|length }} issues. Create a new issue
     <a href="{{ path("app_new_createissue") }}">here</a>
 </p>
-
-<form action="{{ path("app_search_searchissues") }}">
-<label for="query">Search issues:</label><br>
-    <input type="search" id="query" name="query" placeholder="Issue title or description" size="40">
-    <button type="submit">Search</button>
-</form>
 
 <table class="pure-table pure-table-bordered pure-table-striped">
     <thead>

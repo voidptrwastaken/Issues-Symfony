@@ -20,7 +20,18 @@ class SearchController extends AbstractController
     #[Route("/search", methods: ["GET"])]
     public function searchIssues(Request $request): Response
     {
-        $issues = $this->repository->searchIssues($request->query->get("query"));
-        return new Response($this->renderView("issues/show.html.twig", ["issues" => $issues]));
+        $query = $request->query->get("query");
+        if($query === "" || preg_match("/\s+[^a-z]/", $query))
+        {
+            $allIssues = $this->repository->fetchIssues();
+            return new Response($this->renderView("issues/show.html.twig", ["issues" => $allIssues, "message" => "Please enter at lease one term to search"]));
+        }
+        $issues = $this->repository->searchIssues($query);
+        
+        if(count($issues) === 0)
+        {
+            return new Response($this->renderView("issues/show.html.twig", ["issues" => $issues, "message" => "No results for \"" . $query . "\""]));
+        }
+        return new Response($this->renderView("issues/show.html.twig", ["issues" => $issues, "message" => "Displaying search results for \"" . $query . "\""]));
     }
 }
