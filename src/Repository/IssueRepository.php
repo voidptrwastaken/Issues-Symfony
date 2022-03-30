@@ -30,6 +30,13 @@ class IssueRepository
 
     public function updateIssue(int $id, string $title, string $description, int $severity)
     {
+        $issue = $this->fetchIssue($id);
+
+        if($issue->getResolutionStatus() === 1)
+        {
+            return false;
+        }
+
         $query = "UPDATE issue SET title=:title, description=:description, modificationDate=:modificationDate, severity=:severity WHERE id=$id";
         $statement = $this->pdo->prepare($query);
         $statement->bindValue(":title", $title);
@@ -37,6 +44,8 @@ class IssueRepository
         $statement->bindValue(":modificationDate", time());
         $statement->bindValue(":severity", $severity);
         $statement->execute();
+
+        return true;
     }
 
     public function deleteIssue(int $id)

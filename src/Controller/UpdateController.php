@@ -36,7 +36,12 @@ class UpdateController extends AbstractController
             /** @var IssueData */
             $issueData = $form->getData();
 
-            $this->repository->updateIssue((int) $id, $issueData->title, $issueData->description, $issueData->severity);
+            $updateStatus = $this->repository->updateIssue((int) $id, $issueData->title, $issueData->description, $issueData->severity);
+
+            if(!$updateStatus)
+            {
+                return new Response("This issue has already been solved, and therefore cannot be updated\n(and as you can see, not even curl nor postman works)\n", 401);
+            }
 
             return $this->redirectToRoute('app_home_showissues');
         }
