@@ -16,6 +16,16 @@
         <li>Your controller at <code><a href="{{ '/home/yandry/Projects/issues-symfony-yanis/src/Controller/LoginController.php'|file_link(0) }}">src/Controller/LoginController.php</a></code></li>
         <li>Your template at <code><a href="{{ '/home/yandry/Projects/issues-symfony-yanis/templates/login/index.html.twig'|file_link(0) }}">templates/login/index.html.twig</a></code></li>
     </ul>
-    {{ form(form) }}
+    <form action="{{ path('login') }}" method="post">
+        <label for="username">Email:</label>
+        <input type="text" id="username" name="_username" value="{{ last_username }}"/>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="_password"/>
+
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+        <button type="submit">login</button>
+    </form>
 </div>
 {% endblock %}
